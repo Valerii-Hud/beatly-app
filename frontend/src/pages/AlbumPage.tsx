@@ -35,9 +35,9 @@ const View = ({
 }) => {
   return (
     <div className="h-full">
-      <ScrollArea className="h-full">
+      <ScrollArea className="h-full ">
         <div
-          className="absolute inset-0 bg-gradient-to-b from-[#5038a0]/80 via-zinc-900/80 to-zinc-900 pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-b from-[#5038a0]/80 via-zinc-900/80 to-zinc-900 pointer-events-none rounded-lg"
           aria-hidden="true"
         ></div>
         <div>

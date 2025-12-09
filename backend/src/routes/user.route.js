@@ -4,6 +4,6 @@ import { getAllUsers } from '../controller/user.controller.js';
 
 const router = Router();
 
-router.get('/:id', protectRoute, getAllUsers);
+router.get('/', protectRoute, getAllUsers);
 
 export default router;
