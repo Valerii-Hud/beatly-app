@@ -2,10 +2,13 @@ import { SignedIn, SignedOut, SignOutButton } from '@clerk/clerk-react';
 import { LayoutDashboardIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SignInOAuthButtons from './SignInOAuthButtons';
-import type { ReactNode } from 'react';
+import { type ReactNode } from 'react';
+import { useAuthStore } from '@/store/useAuthStore';
 
 const Topbar = () => {
-  const isAdmin = false;
+  const { isAdmin } = useAuthStore();
+
+  console.log({ isAdmin });
   const adminDashboard = isAdmin ? (
     <Link to={'/admin'}>
       <LayoutDashboardIcon className="size-5 mr-2" />

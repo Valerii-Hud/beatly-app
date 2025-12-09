@@ -83,7 +83,6 @@ const View = ({
             <div className="px-6">
               <div className="space-y-2 py-4">
                 {currentAlbum?.songs.map((song: Song, index: number) => {
-                  console.log(song);
                   return (
                     <div
                       key={song._id}
