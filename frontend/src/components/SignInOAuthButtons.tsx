@@ -13,6 +13,10 @@ const SignInOAuthButtons = () => {
     });
   };
 
+  return <View signInWithGoogle={signInWithGoogle} />;
+};
+
+const View = ({ signInWithGoogle }: { signInWithGoogle: () => void }) => {
   return (
     <Button
       variant={'secondary'}

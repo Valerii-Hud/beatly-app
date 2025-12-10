@@ -17,13 +17,15 @@ export interface Album {
   imageUrl: string;
   releaseYear: number;
   songs: Song[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface User {
+  _id: string;
   clerkId: string;
-  createdAt: string;
   fullName: string;
   imageUrl: string;
+  createdAt: string;
   updatedAt: string;
-  _id: string;
 }

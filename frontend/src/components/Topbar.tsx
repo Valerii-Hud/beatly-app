@@ -8,7 +8,6 @@ import { useAuthStore } from '@/store/useAuthStore';
 const Topbar = () => {
   const { isAdmin } = useAuthStore();
 
-  console.log({ isAdmin });
   const adminDashboard = isAdmin ? (
     <Link to={'/admin'}>
       <LayoutDashboardIcon className="size-5 mr-2" />

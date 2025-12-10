@@ -9,6 +9,11 @@ import FriendsActivity from './components/FriendsActivity';
 
 const MainLayout = () => {
   const isMobile = false;
+
+  return <View isMobile={isMobile} />;
+};
+
+const View = ({ isMobile }: { isMobile: boolean }) => {
   return (
     <div className="h-screen bg-black text-white flex flex-col">
       <ResizablePanelGroup
