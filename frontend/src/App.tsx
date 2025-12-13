@@ -1,9 +1,3 @@
-// import {
-//   SignedIn,
-//   SignedOut,
-//   SignInButton,
-//   UserButton,
-// } from '@clerk/clerk-react';
 import { Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
@@ -26,7 +20,7 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/chat" element={<ChatPage />} />
-        <Route path="/albums/:albumId" element={<AlbumPage />} />{' '}
+        <Route path="/albums/:albumId" element={<AlbumPage />} />
       </Route>
     </Routes>
   );
