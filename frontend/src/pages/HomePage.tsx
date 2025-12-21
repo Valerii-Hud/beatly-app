@@ -5,6 +5,7 @@ import FeaturedSection from './components/FeaturedSection';
 import type { Song } from '@/types';
 import SectionGrid from './components/SectionGrid';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { usePlayerStore } from '@/store/usePlayerStore';
 
 const HomePage = () => {
   const {
@@ -17,11 +18,24 @@ const HomePage = () => {
     isLoading,
   } = useMusicStore();
 
+  const { initializeQueue } = usePlayerStore();
+
   useEffect(() => {
     fetchFeaturedSongs();
     fetchMadeForYouSongs();
     fetchTrendingSongs();
   }, [fetchFeaturedSongs, fetchMadeForYouSongs, fetchTrendingSongs]);
+
+  useEffect(() => {
+    if (
+      madeForYouSongs.length > 0 &&
+      featuredSongs.length > 0 &&
+      trendingSongs.length > 0
+    ) {
+      const allSongs = [...featuredSongs, ...madeForYouSongs, ...trendingSongs];
+      initializeQueue(allSongs);
+    }
+  }, [initializeQueue, madeForYouSongs, featuredSongs, trendingSongs]);
 
   return (
     <View
