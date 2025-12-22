@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/lib/axios';
-import type { Album, Song } from '@/types';
+import type { Album, Song, Stats } from '@/types';
 import { create } from 'zustand';
 
 interface MusicStore {
@@ -8,14 +8,17 @@ interface MusicStore {
   isLoading: boolean;
   currentAlbum: null | Album;
   error: string | any | null;
-  fetchAlbums: () => Promise<void>;
   featuredSongs: Song[];
   madeForYouSongs: Song[];
   trendingSongs: Song[];
+  stats: Stats;
   fetchAlbumById: (albumId: string) => Promise<void>;
   fetchFeaturedSongs: () => Promise<void>;
   fetchMadeForYouSongs: () => Promise<void>;
   fetchTrendingSongs: () => Promise<void>;
+  fetchAlbums: () => Promise<void>;
+  fetchStats: () => Promise<void>;
+  fetchSongs: () => Promise<void>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -27,6 +30,13 @@ export const useMusicStore = create<MusicStore>((set) => ({
   featuredSongs: [],
   madeForYouSongs: [],
   trendingSongs: [],
+  stats: {
+    totalSongs: 0,
+    totalAlbums: 0,
+    totalUsers: 0,
+    totalArtists: 0,
+  },
+
   fetchAlbums: async () => {
     set({ isLoading: true, error: null });
     try {
@@ -38,6 +48,31 @@ export const useMusicStore = create<MusicStore>((set) => ({
       set({ isLoading: false });
     }
   },
+
+  fetchSongs: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axiosInstance.get('/songs');
+      set({ songs: response.data });
+    } catch (error: any) {
+      set({ error: error.response.data.message });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  fetchStats: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axiosInstance.get('/stats');
+      set({ stats: response.data });
+    } catch (error: any) {
+      set({ error: error.response.data.message });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
   fetchAlbumById: async (albumId: string) => {
     set({ isLoading: true, error: null });
     try {
@@ -49,6 +84,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
       set({ isLoading: false });
     }
   },
+
   fetchFeaturedSongs: async () => {
     set({ isLoading: true, error: null });
     try {
@@ -60,6 +96,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
       set({ isLoading: false });
     }
   },
+
   fetchMadeForYouSongs: async () => {
     set({ isLoading: true, error: null });
     try {
@@ -71,6 +108,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
       set({ isLoading: false });
     }
   },
+
   fetchTrendingSongs: async () => {
     set({ isLoading: true, error: null });
     try {
