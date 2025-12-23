@@ -12,14 +12,16 @@ export const getStats = async (req, res, next) => {
         Song.aggregate([
           {
             $unionWith: {
-              coll: 'alums',
+              coll: 'albums',
               pipeline: [],
             },
+          },
+          {
             $group: {
               _id: '$artist',
             },
-            $count: 'count',
           },
+          { $count: 'count' },
         ]),
       ]);
     res.status(200).json({
