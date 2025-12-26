@@ -13,19 +13,19 @@ export const initializeSocket = (server) => {
   const userActivities = new Map();
 
   io.on('connection', (socket) => {
-    socket.on('user_connected', (userId) => {
-      userSockets.set(userId, socket.id);
-      userActivities.set(userId, 'Idle');
-      io.emit('user_connected', userId);
+    socket.on('user_connected', (uid) => {
+      userSockets.set(uid, socket.id);
+      userActivities.set(uid, 'Idle');
+      io.emit('user_connected', uid);
 
       socket.emit('users_online', Array.from(userSockets.keys()));
 
       io.emit('activities', Array.from(userSockets.entries()));
     });
 
-    socket.on('update_activity', ({ userId, activity }) => {
-      userActivities.set(userId, activity);
-      io.emit('activity_updated', { userId, activity });
+    socket.on('update_activity', ({ uid, activity }) => {
+      userActivities.set(uid, activity);
+      io.emit('activity_updated', { uid, activity });
     });
 
     socket.on('send_message', async (data) => {
@@ -46,14 +46,15 @@ export const initializeSocket = (server) => {
         socket.emit('message_error', error.message);
       }
     });
+    File;
 
     socket.on('disconnect', () => {
       let disconnectUserId = null;
-      for (const [userId, socketId] of userSockets.entries()) {
+      for (const [uid, socketId] of userSockets.entries()) {
         if (socketId === socket.id) {
-          disconnectUserId = userId;
-          userSockets.delete(userId);
-          userActivities.delete(userId);
+          disconnectUserId = uid;
+          userSockets.delete(uid);
+          userActivities.delete(uid);
           break;
         }
       }
