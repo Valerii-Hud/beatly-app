@@ -11,7 +11,7 @@ const FriendsActivity = () => {
   const { users, fetchUsers } = useChatStore();
   const { user } = useUser();
 
-  const isPlaying: boolean = true;
+  const isPlaying: boolean = false;
 
   useEffect(() => {
     if (user) {

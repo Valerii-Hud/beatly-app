@@ -54,7 +54,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     }
     set({ isConnected: true });
 
-    socket.on('user_online', (users: string[]) => {
+    socket.on('users_online', (users: string[]) => {
       set({ onlineUsers: new Set(users) });
     });
 
