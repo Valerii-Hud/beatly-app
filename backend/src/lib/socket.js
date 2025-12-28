@@ -32,21 +32,27 @@ export const initializeSocket = (server) => {
       try {
         const { senderId, receiverId, content } = data;
 
-        const message = new Message.create({ senderId, receiverId, content });
+        const message = await Message.create({
+          senderId,
+          receiverId,
+          content,
+        });
 
         const receiverSocketId = userSockets.get(receiverId);
+        const senderSocketId = userSockets.get(senderId);
 
         if (receiverSocketId) {
-          receiverId.emit('receive_message', message);
+          io.to(receiverSocketId).emit('receive_message', message);
         }
 
-        socket.emit('message_sent', message);
+        if (senderSocketId) {
+          io.to(senderSocketId).emit('receive_message', message);
+        }
       } catch (error) {
-        console.error(`Socket error: ${error.message}`);
+        console.error('Socket error:', error);
         socket.emit('message_error', error.message);
       }
     });
-    File;
 
     socket.on('disconnect', () => {
       let disconnectUserId = null;

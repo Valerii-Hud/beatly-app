@@ -105,13 +105,13 @@ const View = ({
                 size="icon"
                 className="w-14 h-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-105 transition-all"
               >
-                {!isPlaying &&
+                {isPlaying &&
                 currentAlbum?.songs.some(
                   (song) => song._id === currentSong?._id
                 ) ? (
-                  <Play className="h-7 w-7 text-black" />
-                ) : (
                   <Pause className="h-7 w-7 text-black" />
+                ) : (
+                  <Play className="h-7 w-7 text-black" />
                 )}
               </Button>
             </div>
@@ -146,9 +146,9 @@ const View = ({
                           </span>
                         )}
 
-                        {!isCurrentSong ? (
+                        {!isCurrentSong && !isPlaying && (
                           <Play className="h-4 w-4 hidden group-hover:block" />
-                        ) : null}
+                        )}
                       </div>
                       <div className="flex items-center gap-3">
                         <img

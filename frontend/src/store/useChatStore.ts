@@ -25,7 +25,7 @@ const socketConfig = { autoConnect: false, withCredentials: true };
 const socket = io(baseURL, socketConfig);
 
 export const useChatStore = create<ChatStore>((set, get) => ({
-  socket: null,
+  socket: socket,
   error: null,
   isLoading: false,
   isConnected: false,
@@ -51,38 +51,16 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       socket.auth = { uid };
       socket.connect();
       socket.emit('user_connected', uid);
+      set({ isConnected: true });
     }
-    set({ isConnected: true });
+
+    socket.off();
 
     socket.on('users_online', (users: string[]) => {
       set({ onlineUsers: new Set(users) });
     });
 
-    socket.on('activities', (activities: [string, string][]) => {
-      set({ userActivities: new Map(activities) });
-    });
-
-    socket.on('user_connected', (uid: string) => {
-      set((state) => ({ onlineUsers: new Set([...state.onlineUsers, uid]) }));
-    });
-
-    socket.on('user_disconnected', (uid: string) => {
-      set((state) => {
-        const newOnlineUsers = new Set(state.onlineUsers);
-        newOnlineUsers.delete(uid);
-        return {
-          onlineUsers: newOnlineUsers,
-        };
-      });
-    });
-
     socket.on('receive_message', (message: Message) => {
-      set((state) => ({
-        messages: [...state.messages, message],
-      }));
-    });
-
-    socket.on('message_sent', (message: Message) => {
       set((state) => ({
         messages: [...state.messages, message],
       }));
@@ -92,9 +70,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       set((state) => {
         const newActivities = new Map(state.userActivities);
         newActivities.set(uid, activity);
-        return {
-          userActivities: newActivities,
-        };
+        return { userActivities: newActivities };
       });
     });
   },
@@ -116,15 +92,20 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
   fetchMessages: async (uid) => {
     set({ isLoading: true, error: null });
+
     try {
-      const response = await axiosInstance.get(`/users/messages/${uid}`);
-      set({ messages: response.data });
-    } catch (error: any) {
-      set({ error: error.response.data.message });
+      const res = await axiosInstance.get(`/users/messages/${uid}`);
+      set({ messages: res.data });
+    } catch (e: any) {
+      set({ error: e.message });
     } finally {
       set({ isLoading: false });
     }
   },
 
-  setSelectedUser: (user) => set({ selectedUser: user }),
+  setSelectedUser: (user) =>
+    set({
+      selectedUser: user,
+      messages: [],
+    }),
 }));

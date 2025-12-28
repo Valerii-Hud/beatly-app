@@ -8,10 +8,8 @@ import { useEffect } from 'react';
 import LoginPrompt from './LoginPrompt';
 
 const FriendsActivity = () => {
-  const { users, fetchUsers } = useChatStore();
+  const { users, fetchUsers, onlineUsers, userActivities } = useChatStore();
   const { user } = useUser();
-
-  const isPlaying: boolean = false;
 
   useEffect(() => {
     if (user) {
@@ -19,17 +17,26 @@ const FriendsActivity = () => {
     }
   }, [user, fetchUsers]);
 
-  return <View user={user} users={users} isPlaying={isPlaying} />;
+  return (
+    <View
+      user={user}
+      users={users}
+      onlineUsers={onlineUsers}
+      userActivities={userActivities}
+    />
+  );
 };
 
 const View = ({
   user,
   users,
-  isPlaying,
+  onlineUsers,
+  userActivities,
 }: {
   user: User | any;
   users: User[];
-  isPlaying: boolean;
+  onlineUsers: Set<string>;
+  userActivities: Map<string, string>;
 }) => {
   return (
     <div className="h-full bg-zinc-900 rounded-lg flex flex-col">
@@ -43,6 +50,8 @@ const View = ({
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-4">
           {users.map((user: User) => {
+            const activity = userActivities.get(user.clerkId);
+            const isPlaying = activity && activity !== 'Idle';
             return (
               <div
                 key={user._id}
@@ -55,7 +64,12 @@ const View = ({
                       <AvatarFallback>{user.fullName[0]}</AvatarFallback>
                     </Avatar>
                     <div
-                      className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-zinc-900 bg-zinc-500"
+                      className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-zinc-900 
+                        ${
+                          onlineUsers.has(user.clerkId)
+                            ? 'bg-green-500'
+                            : 'bg-zinc-500'
+                        }`}
                       aria-hidden="true"
                     ></div>
                   </div>
@@ -64,17 +78,17 @@ const View = ({
                       <span className="font-medium text-sm text-white">
                         {user.fullName}
                       </span>
-                      {isPlaying ? (
+                      {isPlaying && (
                         <Music className="size-3.5 text-emerald-400 shrink-0" />
-                      ) : null}
+                      )}
                     </div>
                     {isPlaying ? (
                       <div className="mt-1">
                         <div className="mt-1 text-sm text-white font-medium truncate">
-                          Dota zdelala mi'nia frikom
+                          {activity.replace('Playing ', '').split(' by ')[0]}
                         </div>
                         <div className="text-xs text-zinc-400 truncate">
-                          by Norman
+                          {activity.split(' by ')[1]}
                         </div>
                       </div>
                     ) : (
