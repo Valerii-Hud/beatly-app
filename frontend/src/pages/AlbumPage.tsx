@@ -6,6 +6,7 @@ import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Clock, Pause, Play } from 'lucide-react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import NotFoundPage from './NotFoundPage';
 
 export const formatDuration = (seconds: number) => {
   const minutes = Math.floor(seconds / 60);
@@ -15,7 +16,7 @@ export const formatDuration = (seconds: number) => {
 
 const AlbumPage = () => {
   const { albumId } = useParams();
-  const { fetchAlbumById, currentAlbum, isLoading } = useMusicStore();
+  const { fetchAlbumById, currentAlbum, isLoading, error } = useMusicStore();
   const { currentSong, isPlaying, playAlbum, togglePlay } = usePlayerStore();
 
   useEffect(() => {
@@ -42,7 +43,9 @@ const AlbumPage = () => {
       playAlbum(currentAlbum?.songs, 0);
     }
   };
-
+  if (error) {
+    return <NotFoundPage />;
+  }
   return (
     <View
       currentAlbum={currentAlbum}
